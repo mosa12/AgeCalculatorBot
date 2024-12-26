@@ -1,9 +1,9 @@
-import tkinter as tk
-from tkinter import ttk, messagebox
-from datetime import datetime, timedelta
+import customtkinter as ctk
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from tkinter import messagebox
 
-# Core functionality
+# Function to calculate age
 def calculate_age():
     try:
         birthdate = datetime.strptime(entry_birthdate.get(), "%d.%m.%Y")
@@ -22,7 +22,7 @@ def calculate_age():
         total_seconds = total_minutes * 60 + diff.seconds % 60
 
         # Display results
-        result.set(
+        result_text = (
             f"Years: {age_years} years\n"
             f"Months: {age_months} months\n"
             f"Days: {age_days} days\n\n"
@@ -31,30 +31,76 @@ def calculate_age():
             f"Total Minutes: {total_minutes:,}\n"
             f"Total Seconds: {total_seconds:,}"
         )
+        result_label.configure(text=result_text)
     except ValueError:
         messagebox.showerror("Invalid Input", "Please enter the date in DD.MM.YYYY format.")
 
-# Create GUI
-root = tk.Tk()
-root.title("Age Calculator")
-root.geometry("400x400")
-root.resizable(False, False)
+# Initialize customTkinter
+ctk.set_appearance_mode("dark")  # Options: "dark", "light", "system"
+ctk.set_default_color_theme("blue")  # Options: "blue", "green", "dark-blue"
 
-# Input label and entry
-label_birthdate = ttk.Label(root, text="Enter your birthdate (DD.MM.YYYY):")
-label_birthdate.pack(pady=10)
+# Create main application window
+app = ctk.CTk()
+app.title("Age Calculator")
+app.geometry("550x600")
+app.resizable(False, False)
 
-entry_birthdate = ttk.Entry(root, font=("Arial", 14))
-entry_birthdate.pack(pady=10)
+# Colors
+bg_color = "#1a1a2e"
+frame_color = "#16213e"
+button_color = "#0f3460"
+text_color = "#e94560"
+result_color = "#00adb5"
 
-# Button to calculate
-btn_calculate = ttk.Button(root, text="Calculate Age", command=calculate_age)
-btn_calculate.pack(pady=10)
+# Set window background
+app.configure(bg=bg_color)
 
-# Result display
-result = tk.StringVar()
-label_result = ttk.Label(root, textvariable=result, font=("Arial", 12), anchor="center", justify="left")
-label_result.pack(pady=20)
+# Title label
+title_label = ctk.CTkLabel(
+    app, text="🌟 Age Calculator 🌟", font=ctk.CTkFont(size=28, weight="bold"), text_color=text_color
+)
+title_label.pack(pady=20)
+
+# Input frame
+input_frame = ctk.CTkFrame(app, corner_radius=15, fg_color=frame_color)
+input_frame.pack(pady=20, padx=20, fill="x")
+
+# Birthdate input
+birthdate_label = ctk.CTkLabel(
+    input_frame, text="Enter your birthdate (DD.MM.YYYY):", font=ctk.CTkFont(size=14), text_color="white"
+)
+birthdate_label.pack(pady=10)
+
+entry_birthdate = ctk.CTkEntry(
+    input_frame, placeholder_text="DD.MM.YYYY", font=ctk.CTkFont(size=14), text_color="white"
+)
+entry_birthdate.pack(pady=10, padx=20)
+
+# Calculate button
+calculate_button = ctk.CTkButton(
+    app, text="💡 Calculate Age 💡", command=calculate_age, fg_color=button_color, hover_color=text_color
+)
+calculate_button.pack(pady=20)
+
+# Results frame
+result_frame = ctk.CTkFrame(app, corner_radius=15, fg_color=frame_color)
+result_frame.pack(pady=10, padx=20, fill="x")
+
+result_label = ctk.CTkLabel(
+    result_frame,
+    text="Your results will appear here!",
+    font=ctk.CTkFont(size=16),
+    text_color=result_color,
+    wraplength=400,
+    justify="left",
+)
+result_label.pack(pady=20)
+
+# Footer label
+footer_label = ctk.CTkLabel(
+    app, text="🔗 Built with Love 💖 ", font=ctk.CTkFont(size=12), text_color="white"
+)
+footer_label.pack(pady=10)
 
 # Run the application
-root.mainloop()
+app.mainloop()
